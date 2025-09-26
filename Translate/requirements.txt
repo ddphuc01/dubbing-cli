@@ -1,8 +1,0 @@
-srt==3.5.3
-torch==2.8.0
-transformers==4.56.2
-accelerate==1.10.1
-tqdm==4.67.1
-requests==2.31.0
-Flask==3.0.0
-python-dotenv==1.0.1
