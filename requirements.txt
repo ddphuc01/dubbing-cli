@@ -1,0 +1,38 @@
+yt-dlp>=2023.07.06
+loguru>=0.7.0
+torch>=2.0.0
+torchaudio>=2.0.0
+numpy>=1.21.0
+scipy>=1.7.0
+librosa>=0.10.0
+translators>=5.0.0
+noisereduce>=3.0
+soundfile>=0.12.0
+python-dotenv>=0.19.0
+openai>=1.0
+groq>=0.3.0
+google-generativeai>=0.4.0
+transformers>=4.21.0
+accelerate>=0.13.0
+optimum>=1.4.0
+intel-extension-for-pytorch>=2.0.0
+
+# For Demucs installation, please install it separately as it's a submodule
+# You can install it by cloning the repository and running pip install -e .
+# Note: Demucs may have compatibility issues with newer torch versions
+demucs @ git+https://github.com/facebookresearch/demucs.git
+
+# For WhisperX installation (compatible with torch 2.x)
+git+https://github.com/m-bain/whisperx.git
+
+# For FunASR installation
+funasr>=0.8.0
+modelscope>=1.10.0
+
+# For NVIDIA NeMo installation (uncomment to use)
+nemo_toolkit[asr]>=1.20.0
+
+# For TTS functionality
+edge-tts>=6.1.0
+TTS>=0.22.0
+gTTS>=2.5.0
