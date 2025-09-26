@@ -16,6 +16,10 @@ transformers>=4.21.0
 accelerate>=0.13.0
 optimum>=1.4.0
 intel-extension-for-pytorch>=2.0.0
+srt>=3.5.3
+tqdm>=4.66.1
+Flask>=3.0.0
+requests>=2.31.0
 
 # For Demucs installation, please install it separately as it's a submodule
 # You can install it by cloning the repository and running pip install -e .

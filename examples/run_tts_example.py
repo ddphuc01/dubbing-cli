@@ -37,7 +37,7 @@ def main():
     
     # Import and run the srt_to_audio functionality
     try:
-        from srt_to_audio import srt_to_audio
+        from core.subtitles.srt_to_audio import srt_to_audio
         
         audio_files = srt_to_audio(
             srt_path=args.srt_file,
@@ -52,7 +52,7 @@ def main():
             print(f" - {audio_file}")
         
         # Optionally combine all audio files into one
-        from srt_to_audio import combine_audio_files
+        from core.subtitles.srt_to_audio import combine_audio_files
         if audio_files:
             combined_path = os.path.join(args.output_dir, "combined_audio.wav")
             combine_audio_files(audio_files, combined_path)

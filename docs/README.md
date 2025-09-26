@@ -35,8 +35,8 @@ A comprehensive command-line tool for video processing, including downloading, a
 ### Generate Subtitles
 
 ```bash
-python audio_to_subtitle.py "path/to/audio.wav" -m FunASR -d cuda
-```
+python core/audio/audio_to_subtitle.py "path/to/audio.wav" -m FunASR -d cuda
+````
 
 ### Advanced Subtitle Generation with Speaker Diarization
 
@@ -58,7 +58,7 @@ To enable proper speaker diarization (identifying different speakers like CapCut
 
 3. Run subtitle generation with diarization to get CapCut-like granular timing and speaker identification:
    ```bash
-   python audio_to_subtitle.py "path/to/audio.wav" -m FunASR -d cuda --min-speakers 1 --max-speakers 10
+   python core/audio/audio_to_subtitle.py "path/to/audio.wav" -m FunASR -d cuda --min-speakers 1 --max-speakers 10
    ```
 
 ## Options
@@ -99,7 +99,7 @@ Note: By default, all ASR methods (WhisperX, FunASR, and NeMo) are included in t
 
 ### Video Download
 ```bash
-python download_video.py [URL] [OPTIONS]
+python core/download/download_video.py [URL] [OPTIONS]
 ```
 
 #### Options
@@ -112,17 +112,17 @@ python download_video.py [URL] [OPTIONS]
 
 Download a single video:
 ```bash
-python download_video.py "https://www.youtube.com/watch?v=example"
+python core/download/download_video.py "https://www.youtube.com/watch?v=example"
 ```
 
 Download a playlist with specific settings:
 ```bash
-python download_video.py "https://www.youtube.com/playlist?list=example" -o "my_videos" -r "720p" -n 10
+python core/download/download_video.py "https://www.youtube.com/playlist?list=example" -o "my_videos" -r "720p" -n 10
 ```
 
 ### Audio Extraction and Vocal Separation
 ```bash
-python separate_audio.py [VIDEO_PATH] [OPTIONS]
+python core/audio/separate_audio.py [VIDEO_PATH] [OPTIONS]
 ```
 
 #### Options
@@ -136,22 +136,22 @@ python separate_audio.py [VIDEO_PATH] [OPTIONS]
 
 Extract audio from a video:
 ```bash
-python separate_audio.py "path/to/video.mp4"
+python core/audio/separate_audio.py "path/to/video.mp4"
 ```
 
 Extract audio and separate vocals:
 ```bash
-python separate_audio.py "path/to/video.mp4" -s
+python core/audio/separate_audio.py "path/to/video.mp4" -s
 ```
 
 Extract audio and separate vocals using GPU:
 ```bash
-python separate_audio.py "path/to/video.mp4" -s -d cuda
+python core/audio/separate_audio.py "path/to/video.mp4" -s -d cuda
 ```
 
 ### Complete Pipeline (Download and Separate)
 ```bash
-python pipeline.py [URL] [OPTIONS]
+python pipelines/pipeline.py [URL] [OPTIONS]
 ```
 
 #### Options
@@ -165,17 +165,17 @@ python pipeline.py [URL] [OPTIONS]
 
 Download a video and separate its audio:
 ```bash
-python pipeline.py "https://www.youtube.com/watch?v=example"
+python pipelines/pipeline.py "https://www.youtube.com/watch?v=example"
 ```
 
 Download a video in 720p and separate its audio using GPU:
 ```bash
-python pipeline.py "https://www.youtube.com/watch?v=example" -r 720p -d cuda
+python pipelines/pipeline.py "https://www.youtube.com/watch?v=example" -r 720p -d cuda
 ```
 
 ### Subtitle Generation with Speaker Diarization
 ```bash
-python audio_to_subtitle.py [AUDIO_PATH] [OPTIONS]
+python core/audio/audio_to_subtitle.py [AUDIO_PATH] [OPTIONS]
 ```
 
 #### Options
@@ -194,27 +194,27 @@ python audio_to_subtitle.py [AUDIO_PATH] [OPTIONS]
 
 Generate subtitles from vocal audio with speaker diarization:
 ```bash
-python audio_to_subtitle.py "path/to/vocals.wav"
+python core/audio/audio_to_subtitle.py "path/to/vocals.wav"
 ```
 
 Generate subtitles using FunASR (default):
 ```bash
-python audio_to_subtitle.py "path/to/vocals.wav" -m FunASR
+python core/audio/audio_to_subtitle.py "path/to/vocals.wav" -m FunASR
 ```
 
 Generate subtitles with GPU processing:
 ```bash
-python audio_to_subtitle.py "path/to/vocals.wav" -d cuda
+python core/audio/audio_to_subtitle.py "path/to/vocals.wav" -d cuda
 ```
 
 Generate subtitles from vocal audio in a folder:
 ```bash
-python audio_to_subtitle.py -f "path/to/video/folder"
+python core/audio/audio_to_subtitle.py -f "path/to/video/folder"
 ```
 
 ### Subtitle Translation
 ```bash
-python translate_subtitles.py [INPUT_SRT] [OPTIONS]
+python core/subtitles/translate_subtitles.py [INPUT_SRT] [OPTIONS]
 ```
 
 #### Options
@@ -229,27 +229,62 @@ python translate_subtitles.py [INPUT_SRT] [OPTIONS]
 
 Translate subtitles from auto-detected language to English:
 ```bash
-python translate_subtitles.py "path/to/subtitles.srt"
+python core/subtitles/translate_subtitles.py "path/to/subtitles.srt"
 ```
 
 Translate subtitles from Chinese to Vietnamese:
 ```bash
-python translate_subtitles.py "path/to/subtitles.srt" -s zh -t vi
+python core/subtitles/translate_subtitles.py "path/to/subtitles.srt" -s zh -t vi
 ```
 
 Translate subtitles using Bing translator:
 ```bash
-python translate_subtitles.py "path/to/subtitles.srt" -r bing -t es
+python core/subtitles/translate_subtitles.py "path/to/subtitles.srt" -r bing -t es
 ```
 
 Translate subtitles with custom output path:
 ```bash
-python translate_subtitles.py "path/to/subtitles.srt" -o "path/to/translated_subtitles.srt" -t fr
+python core/subtitles/translate_subtitles.py "path/to/subtitles.srt" -o "path/to/translated_subtitles.srt" -t fr
+```
+
+### Enhanced Chinese to Vietnamese Translation
+For improved Chinese to Vietnamese translation with character name preservation and genre context, use the enhanced translation module:
+
+```bash
+python core/subtitles/enhanced_translation.py [INPUT_SRT] [OPTIONS]
+```
+
+#### Options
+- `-o`, `--output`: Output path for translated .srt file (default: input_vn.srt)
+- `--batch-size`: Batch size for translation (default: 32)
+- `--no-preserve-names`: Disable preservation of character names
+- `--genre`: Genre of the content for context (e.g., quyenluctrungquoc, tienhiep, hienthai, kinghi, tinhcam)
+
+#### Examples
+
+Basic translation with character name preservation:
+```bash
+python core/subtitles/enhanced_translation.py "path/to/chinese_subtitles.srt"
+```
+
+Translation with genre context (for Chinese power dramas):
+```bash
+python core/subtitles/enhanced_translation.py "path/to/chinese_subtitles.srt" --genre quyenluctrungquoc
+```
+
+Custom batch size and output file:
+```bash
+python core/subtitles/enhanced_translation.py "path/to/chinese_subtitles.srt" -o "path/to/vietnamese_subtitles.srt" --batch-size 64
+```
+
+Disable character name preservation:
+```bash
+python core/subtitles/enhanced_translation.py "path/to/chinese_subtitles.srt" --no-preserve-names
 ```
 
 ### SRT to Audio Conversion (TTS)
 ```bash
-python srt_to_audio.py [SRT_PATH] [OPTIONS]
+python core/subtitles/srt_to_audio.py [SRT_PATH] [OPTIONS]
 ```
 
 #### Options
@@ -278,22 +313,22 @@ ffmpeg -i input.wav -filter:a atempo=0.8 output.wav  # Decrease speed by 20%
 
 Convert SRT to audio using Edge TTS (default):
 ```bash
-python srt_to_audio.py "path/to/subtitles.srt"
+python core/subtitles/srt_to_audio.py "path/to/subtitles.srt"
 ```
 
 Convert SRT to audio with specific voice and language:
 ```bash
-python srt_to_audio.py "path/to/subtitles.srt" --voice "en-US-RogerNeural" --language "en" --output-dir "./audio_output"
+python core/subtitles/srt_to_audio.py "path/to/subtitles.srt" --voice "en-US-RogerNeural" --language "en" --output-dir "./audio_output"
 ```
 
 Convert SRT to audio using XTTS with voice cloning (requires speaker reference audio):
 ```bash
-python srt_to_audio.py "path/to/subtitles.srt" --method xtts --speaker-wav "path/to/speaker.wav" --language "en"
+python core/subtitles/srt_to_audio.py "path/to/subtitles.srt" --method xtts --speaker-wav "path/to/speaker.wav" --language "en"
 ```
 
 Convert SRT to audio and combine all segments into a single file:
 ```bash
-python srt_to_audio.py "path/to/subtitles.srt" --combine
+python core/subtitles/srt_to_audio.py "path/to/subtitles.srt" --combine
 ```
 
 ### Model Download
@@ -313,17 +348,17 @@ The project now includes functionality to combine video, audio, and subtitles in
 
 To add both audio and subtitles to a video file:
 ```bash
-python run_video_synthesis.py input_video.mp4 --audio input_audio.wav --subtitles input_subtitles.srt --output output_video.mp4
+python core/synthesis/run_video_synthesis.py input_video.mp4 --audio input_audio.wav --subtitles input_subtitles.srt --output output_video.mp4
 ```
 
 To add only audio to a video file:
 ```bash
-python run_video_synthesis.py input_video.mp4 --audio input_audio.wav --output output_video.mp4 --audio-only
+python core/synthesis/run_video_synthesis.py input_video.mp4 --audio input_audio.wav --output output_video.mp4 --audio-only
 ```
 
 To add only subtitles to a video file:
 ```bash
-python run_video_synthesis.py input_video.mp4 --subtitles input_subtitles.srt --output output_video.mp4 --subtitles-only
+python core/synthesis/run_video_synthesis.py input_video.mp4 --subtitles input_subtitles.srt --output output_video.mp4 --subtitles-only
 ```
 
 Additional options:

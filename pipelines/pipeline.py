@@ -18,7 +18,7 @@ def run_download_video(url: str, output_dir: str = "downloads", resolution: str 
     logger.info(f"Starting video download: {url}")
     
     cmd: List[str] = [
-        sys.executable, "download_video.py",
+        sys.executable, "core/download/download_video.py",
         url,
         "-o", output_dir,
         "-r", resolution,
@@ -70,7 +70,7 @@ def run_separate_audio(video_path: str, separate_vocals: bool = True, device: st
     logger.info(f"Starting audio separation for: {video_path}")
     
     cmd: List[str] = [
-        sys.executable, "separate_audio.py",
+        sys.executable, "core/audio/separate_audio.py",
         video_path
     ]
     
@@ -115,7 +115,7 @@ def run_generate_subtitles(audio_path: str, method: str = 'WhisperX', model_name
         device_to_use = device
     
     cmd: List[str] = [
-        sys.executable, "audio_to_subtitle.py",
+        sys.executable, "core/audio/audio_to_subtitle.py",
         audio_path,
         "-m", method,
         "--model", model_name,

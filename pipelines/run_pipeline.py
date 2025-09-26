@@ -55,7 +55,7 @@ def main():
     # Step 1: Download video
     logger.info("Step 1: Downloading video")
     download_cmd = [
-        sys.executable, "download_video.py",
+        sys.executable, "core/download/download_video.py",
         args.url,
         "-o", args.output_dir,
         "-r", args.resolution,
@@ -85,9 +85,9 @@ def main():
     # Step 3: Separate audio
     logger.info("Step 3: Separating audio")
     separate_cmd = [
-        sys.executable, "separate_audio.py",
+        sys.executable, "core/audio/separate_audio.py",
         video_path,
-        "-s",  # Separate vocals
+        "-s", # Separate vocals
         "-d", args.device
     ]
     
@@ -120,7 +120,7 @@ def main():
     # Step 5: Generate subtitles
     logger.info("Step 5: Generating subtitles")
     subtitle_cmd = [
-        sys.executable, "audio_to_subtitle.py",
+        sys.executable, "core/audio/audio_to_subtitle.py",
         vocal_audio_path,
         "-m", args.subtitle_method,
         "--model", args.subtitle_model,
