@@ -107,6 +107,9 @@ venv.bak/
 .vscode/
 *.code-workspace
 
+# KiloCode configuration
+.kilocode/
+
 # PyCharm
 # User-specific stuff:
 .idea/
@@ -176,6 +179,7 @@ datasets/
 # Translation cache
 .translation_cache/
 .cache/
+Translate/
 
 # Config files with sensitive data
 config/*.env
