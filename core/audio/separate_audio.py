@@ -9,13 +9,13 @@ import os
 import sys
 import time
 import gc
+import numpy as np
+from scipy.io import wavfile
 from loguru import logger
 
 try:
     from demucs.api import Separator
     import torch
-    import numpy as np
-    from scipy.io import wavfile
     DEMUCS_AVAILABLE = True
 except ImportError:
     DEMUCS_AVAILABLE = False
@@ -205,11 +205,17 @@ def main():
         
         logger.success("Processing completed successfully!")
         if args.separate_vocals:
-            audio_path, vocal_path, instrumental_path = result
-            logger.info(f"Extracted audio: {audio_path}")
-            if vocal_path and instrumental_path:
-                logger.info(f"Separated vocals: {vocal_path}")
-                logger.info(f"Separated instruments: {instrumental_path}")
+            if DEMUCS_AVAILABLE and len(result) == 3:
+                audio_path, vocal_path, instrumental_path = result
+                logger.info(f"Extracted audio: {audio_path}")
+                if vocal_path and instrumental_path:
+                    logger.info(f"Separated vocals: {vocal_path}")
+                    logger.info(f"Separated instruments: {instrumental_path}")
+            else:
+                # When Demucs is not available, result is (audio_path, None)
+                audio_path = result[0] if isinstance(result, tuple) else result
+                logger.info(f"Extracted audio: {audio_path}")
+                logger.warning("Vocal separation was skipped due to missing Demucs dependency")
         else:
             audio_path = result[0] if isinstance(result, tuple) else result
             logger.info(f"Extracted audio: {audio_path}")

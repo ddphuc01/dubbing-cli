@@ -20,12 +20,23 @@ A comprehensive command-line tool for video processing, including downloading, a
    cd Video-CLI
    ```
 
-2. Install dependencies:
+2. Create and activate a virtual environment:
+   ```bash
+   # On Windows
+   python -m venv venv
+   venv\Scripts\activate
+   
+   # On macOS/Linux
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. For WhisperX support (recommended for better results):
+4. For WhisperX support (recommended for better results):
    ```bash
    pip install git+https://github.com/m-bain/whisperx.git
    ```
@@ -378,12 +389,37 @@ Additional options:
 
 - yt-dlp
 - loguru
+- torch
+- torchaudio
+- numpy
+- scipy
+- librosa
+- translators
+- noisereduce
+- soundfile
+- python-dotenv
+- openai
+- groq
+- google-generativeai
+- transformers
+- accelerate
+- optimum
+- intel-extension-for-pytorch
+- srt
+- tqdm
+- Flask
+- requests
 - ffmpeg (for audio extraction)
-- torch (for vocal separation)
-- numpy (for vocal separation)
-- scipy (for vocal separation)
 - demucs (for vocal separation)
 - edge-tts (for TTS functionality)
 - TTS (for XTTS functionality)
 - gTTS (for basic TTS functionality)
 - ffmpeg-python (for video synthesis functionality)
+- sentencepiece
+- protobuf
+- google-gemini (or google-generativeai)
+- funasr
+- modelscope
+- nemo_toolkit[asr] (optional)
+
+Note: It's recommended to use a virtual environment (venv) to isolate project dependencies from your system-wide Python installation. See the Installation section above for instructions on creating and activating a virtual environment.

@@ -93,7 +93,20 @@ def main():
     
     if not run_command(separate_cmd, "Audio separation"):
         logger.error("Pipeline failed at audio separation step")
-        sys.exit(1)
+        # Check if the error is related to CUDA, and try again with CPU
+        if args.device == "cuda":
+            logger.info("CUDA not available, trying with CPU")
+            separate_cmd = [
+                sys.executable, "core/audio/separate_audio.py",
+                video_path,
+                "-s", # Separate vocals
+                "-d", "cpu"
+            ]
+            if not run_command(separate_cmd, "Audio separation with CPU"):
+                logger.error("Pipeline failed at audio separation step with CPU too")
+                sys.exit(1)
+        else:
+            sys.exit(1)
     
     # Step 4: Find the vocal audio file
     logger.info("Step 4: Finding vocal audio file")
@@ -105,11 +118,16 @@ def main():
         vocal_audio_path = os.path.join(video_dir, "audio_vocals.wav")
         
         if not os.path.exists(vocal_audio_path):
-            # Look for any WAV file
-            for file in os.listdir(video_dir):
-                if file.endswith('.wav'):
-                    vocal_audio_path = os.path.join(video_dir, file)
-                    break
+            # Look for download.wav (basic audio extraction when Demucs is not available)
+            download_audio_path = os.path.join(video_dir, "download.wav")
+            if os.path.exists(download_audio_path):
+                vocal_audio_path = download_audio_path
+            else:
+                # Look for any WAV file as a last resort
+                for file in os.listdir(video_dir):
+                    if file.endswith('.wav') and file != "vocals.wav" and file != "audio_vocals.wav":
+                        vocal_audio_path = os.path.join(video_dir, file)
+                        break
     
     if not os.path.exists(vocal_audio_path):
         logger.error("Could not find vocal audio file")
@@ -138,7 +156,31 @@ def main():
     
     if not run_command(subtitle_cmd, "Subtitle generation"):
         logger.error("Pipeline failed at subtitle generation step")
-        sys.exit(1)
+        # Check if the error is related to CUDA, and try again with CPU
+        if args.device == "cuda":
+            logger.info("CUDA not available for subtitle generation, trying with CPU")
+            subtitle_cmd = [
+                sys.executable, "core/audio/audio_to_subtitle.py",
+                vocal_audio_path,
+                "-m", args.subtitle_method,
+                "--model", args.subtitle_model,
+                "-d", "cpu"
+            ]
+            # Add diarization options
+            if args.no_diarization:
+                subtitle_cmd.append("--no-diarization")
+            
+            if args.min_speakers:
+                subtitle_cmd.extend(["--min-speakers", str(args.min_speakers)])
+            
+            if args.max_speakers:
+                subtitle_cmd.extend(["--max-speakers", str(args.max_speakers)])
+            
+            if not run_command(subtitle_cmd, "Subtitle generation with CPU"):
+                logger.error("Pipeline failed at subtitle generation step with CPU too")
+                sys.exit(1)
+        else:
+            sys.exit(1)
     
     logger.success("Complete pipeline finished successfully!")
     logger.info(f"Video downloaded to: {video_path}")

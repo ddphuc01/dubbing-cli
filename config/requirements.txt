@@ -21,6 +21,10 @@ tqdm>=4.66.1
 Flask>=3.0.0
 requests>=2.31.0
 
+# Translation-specific dependencies from translation_requirements.txt
+sentencepiece>=0.1.99
+protobuf>=3.20.3,<4.0.0
+
 # For Demucs installation, please install it separately as it's a submodule
 # You can install it by cloning the repository and running pip install -e .
 # Note: Demucs may have compatibility issues with newer torch versions
@@ -34,12 +38,12 @@ funasr>=0.8.0
 modelscope>=1.10.0
 
 # For NVIDIA NeMo installation (uncomment to use)
-nemo_toolkit[asr]>=1.20.0
+# nemo_toolkit[asr]>=1.20.0
 
 # For TTS functionality
 edge-tts>=6.1.0
 TTS>=0.22.0
-gTS>=2.5.0
+gTTS>=2.5.0
 
 # For video synthesis functionality
 ffmpeg-python>=0.2.0

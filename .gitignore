@@ -109,6 +109,9 @@ venv.bak/
 
 # KiloCode configuration
 .kilocode/
+.kilocodemodes
+MODE_CONFIG.json
+PROJECT_DEFAULT_TEMPLATE.md    
 
 # PyCharm
 # User-specific stuff:
