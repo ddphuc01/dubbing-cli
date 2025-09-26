@@ -1,6 +1,6 @@
-# Video-CLI
+# Dubbing CLI
 
-A command-line tool for processing videos, including downloading, audio separation, subtitle generation, and more.
+A comprehensive command-line tool for video processing, including downloading, audio separation, subtitle generation, translation, TTS conversion, and video synthesis with custom audio and subtitles. This tool enables the creation of dubbed videos with synchronized audio and customizable subtitles to match the original video content, similar to professional dubbing tools like CapCut and other video editing platforms.
 
 ## Features
 
@@ -9,6 +9,7 @@ A command-line tool for processing videos, including downloading, audio separati
 - Generate subtitles using WhisperX, FunASR, or NeMo
 - Translate subtitles
 - Convert SRT subtitles to synchronized audio using TTS
+- Combine video, audio, and subtitles into a single video file
 - Support for multiple subtitle formats (SRT, VTT, TXT)
 
 ## Installation
@@ -75,16 +76,6 @@ To enable proper speaker diarization (identifying different speakers like CapCut
 - PyTorch with CUDA support (recommended)
 - ffmpeg
 
-## Installation
-
-1. Clone or download this repository
-2. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-Note: By default, all ASR methods (WhisperX, FunASR, and NeMo) are included in the requirements. If you only want to use specific methods, you can comment out the corresponding lines in `requirements.txt` before running the installation command.
-
 ## Environment Setup
 
 To use the audio-to-subtitle functionality with WhisperX and speaker diarization, you need to set up your environment properly:
@@ -104,10 +95,10 @@ To use the audio-to-subtitle functionality with WhisperX and speaker diarization
 
 Note: By default, all ASR methods (WhisperX, FunASR, and NeMo) are included in the requirements. If you only want to use specific methods, you can comment out the corresponding lines in `requirements.txt` before running the installation command.
 
-## Usage
+## Main Components
 
 ### Video Download
-```
+```bash
 python download_video.py [URL] [OPTIONS]
 ```
 
@@ -120,17 +111,17 @@ python download_video.py [URL] [OPTIONS]
 #### Examples
 
 Download a single video:
-```
+```bash
 python download_video.py "https://www.youtube.com/watch?v=example"
 ```
 
 Download a playlist with specific settings:
-```
+```bash
 python download_video.py "https://www.youtube.com/playlist?list=example" -o "my_videos" -r "720p" -n 10
 ```
 
 ### Audio Extraction and Vocal Separation
-```
+```bash
 python separate_audio.py [VIDEO_PATH] [OPTIONS]
 ```
 
@@ -144,22 +135,22 @@ python separate_audio.py [VIDEO_PATH] [OPTIONS]
 #### Examples
 
 Extract audio from a video:
-```
+```bash
 python separate_audio.py "path/to/video.mp4"
 ```
 
 Extract audio and separate vocals:
-```
+```bash
 python separate_audio.py "path/to/video.mp4" -s
 ```
 
 Extract audio and separate vocals using GPU:
-```
+```bash
 python separate_audio.py "path/to/video.mp4" -s -d cuda
 ```
 
 ### Complete Pipeline (Download and Separate)
-```
+```bash
 python pipeline.py [URL] [OPTIONS]
 ```
 
@@ -173,12 +164,12 @@ python pipeline.py [URL] [OPTIONS]
 #### Examples
 
 Download a video and separate its audio:
-```
+```bash
 python pipeline.py "https://www.youtube.com/watch?v=example"
 ```
 
 Download a video in 720p and separate its audio using GPU:
-```
+```bash
 python pipeline.py "https://www.youtube.com/watch?v=example" -r 720p -d cuda
 ```
 
@@ -305,30 +296,6 @@ Convert SRT to audio and combine all segments into a single file:
 python srt_to_audio.py "path/to/subtitles.srt" --combine
 ```
 
-### Pipeline (Download and Separate)
-```bash
-python pipeline.py [URL] [OPTIONS]
-```
-
-#### Options
-- `-o`, `--output-dir`: Output directory for downloaded video (default: downloads)
-- `-r`, `--resolution`: Video resolution (default: 1080p)
-- `-n`, `--num-videos`: Number of videos to download from playlist (default: 5)
-- `-d`, `--device`: Device to use for audio separation (auto, cpu, cuda, default: auto)
-- `-h`, `--help`: Show help message
-
-#### Examples
-
-Download a video and separate its audio:
-```bash
-python pipeline.py "https://www.youtube.com/watch?v=example"
-```
-
-Download a video in 720p and separate its audio using GPU:
-```bash
-python pipeline.py "https://www.youtube.com/watch?v=example" -r 720p -d cuda
-```
-
 ### Model Download
 
 To download the required FunASR models locally for offline use, run the following command:
@@ -337,6 +304,34 @@ python download_models.py --model-type funasr
 ```
 
 This will download all necessary FunASR models to the `models/ASR/FunASR/` directory. The audio_to_subtitle.py script will automatically use these local models if they exist, falling back to online models if needed.
+
+### Video Synthesis (New Feature)
+
+The project now includes functionality to combine video, audio, and subtitles into a single video file. This feature allows you to add custom audio tracks and subtitles to existing videos with customizable styling options.
+
+#### Usage
+
+To add both audio and subtitles to a video file:
+```bash
+python run_video_synthesis.py input_video.mp4 --audio input_audio.wav --subtitles input_subtitles.srt --output output_video.mp4
+```
+
+To add only audio to a video file:
+```bash
+python run_video_synthesis.py input_video.mp4 --audio input_audio.wav --output output_video.mp4 --audio-only
+```
+
+To add only subtitles to a video file:
+```bash
+python run_video_synthesis.py input_video.mp4 --subtitles input_subtitles.srt --output output_video.mp4 --subtitles-only
+```
+
+Additional options:
+- `--volume`: Set audio volume multiplier (default: 1.0)
+- `--font-size`: Set subtitle font size (default: 24)
+- `--font-color`: Set subtitle font color (default: white)
+- `--border-color`: Set subtitle border color (default: black)
+- `--border-width`: Set subtitle border width (default: 1)
 
 ## Supported Platforms
 
@@ -356,33 +351,4 @@ This will download all necessary FunASR models to the `models/ASR/FunASR/` direc
 - edge-tts (for TTS functionality)
 - TTS (for XTTS functionality)
 - gTTS (for basic TTS functionality)
-
-## Setting up Git and Pushing to GitHub
-
-To prepare this project for uploading to GitHub, follow these steps:
-
-1. Remove unnecessary data directories before committing:
-   ```bash
-   # Remove download and test output directories that shouldn't be committed
-   rm -rf downloads/
-   rm -rf test_output/
-   rm -rf models/ # Only if the models directory is too large to commit
-   ```
-
-2. Make sure your `.env` file (containing sensitive information like API keys) is not committed. It should already be in `.gitignore`.
-
-3. Initialize Git repository and add remote origin:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Add Video-CLI project"
-   git branch -M main
-   git remote add origin <your-github-repository-url>
-   git push -u origin main
-   ```
-
-Alternatively, you can use the provided setup scripts in this repository to automate the process:
-- On Linux/Mac: `setup_git.sh` (make sure to chmod +x before running)
-- On Windows: `setup_git.bat`
-#   d u b b i n g - c l i  
- 
+- ffmpeg-python (for video synthesis functionality)
